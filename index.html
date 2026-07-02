@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOG 到着時刻計算</title>
+
+<style>
+body{
+    font-family: "Yu Gothic","Meiryo",sans-serif;
+    background:#202124;
+    color:white;
+    margin:0;
+}
+
+.container{
+    max-width:450px;
+    margin:40px auto;
+    padding:25px;
+    background:#2d2f33;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+h1{
+    text-align:center;
+    margin-top:0;
+}
+
+.time{
+    text-align:center;
+    font-size:32px;
+    margin:15px 0;
+    font-weight:bold;
+}
+
+label{
+    display:block;
+    margin-top:18px;
+    font-size:15px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    font-size:20px;
+    border-radius:8px;
+    border:none;
+    margin-top:5px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    font-size:20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#4285f4;
+    color:white;
+}
+
+button:hover{
+    background:#2f6fd8;
+}
+
+.result{
+    margin-top:30px;
+    text-align:center;
+}
+
+.result h2{
+    margin-bottom:5px;
+}
+
+#arrival{
+    font-size:42px;
+    font-weight:bold;
+    color:#66ff99;
+}
+
+.small{
+    margin-top:15px;
+    color:#aaa;
+    font-size:13px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>MOG 到着時刻計算</h1>
+
+<div>
+現在時刻
+<div class="time" id="now"></div>
+</div>
+
+<label>行軍時間（秒）</label>
+<input id="march" type="number" value="0">
+
+<label>バッファ（秒）</label>
+<input id="buffer" type="number" value="0">
+
+<label>最遅行軍時間（秒）</label>
+<input id="latest" type="number" value="0">
+
+<button onclick="calc()">計算</button>
+
+<div class="result">
+
+<h2>到着時刻</h2>
+
+<div id="arrival">--:--:--</div>
+
+<button onclick="copyTime()">📋 時刻をコピー</button>
+
+</div>
+
+<div class="small">
+現在時刻 + 行軍時間 + バッファ + 最遅行軍時間
+</div>
+
+</div>
+
+<script>
+
+function updateClock(){
+
+    const now=new Date();
+
+    document.getElementById("now").textContent=
+        now.toLocaleTimeString('ja-JP',{
+            hour12:false
+        });
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+function calc(){
+
+    const march=Number(document.getElementById("march").value)||0;
+    const buffer=Number(document.getElementById("buffer").value)||0;
+    const latest=Number(document.getElementById("latest").value)||0;
+
+    const total=march+buffer+latest;
+
+    const arrival=new Date(Date.now()+total*1000);
+
+    const text=arrival.toLocaleTimeString('ja-JP',{
+        hour12:false
+    });
+
+    document.getElementById("arrival").textContent=text;
+
+}
+
+function copyTime(){
+
+    const text=document.getElementById("arrival").textContent;
+
+    if(text=="--:--:--") return;
+
+    navigator.clipboard.writeText(text);
+
+    alert("コピーしました！");
+
+}
+
+</script>
+
+</body>
+</html>
